@@ -2,7 +2,9 @@
 #include <Wire.h>
 #include <SoftwareSerial.h>
 #include "SparkFun_STC3x_Arduino_Library.h" //Click here to get the library: http://librarymanager/All#SparkFun_STC3x
+#include "SparkFun_SHTC3.h"
 STC3x mySensor;
+SHTC3 mySensor2;
 SoftwareSerial sws(3, 2);
 
 void setup()
@@ -32,24 +34,38 @@ void setup()
     while (1)
       ;
   }
+
 }
 
 void loop()
 {
   if (mySensor.measureGasConcentration()) // measureGasConcentration will return true when fresh data is available
   {
-    
-    
-    //float CO2 = ;
-    //float temp = mySensor.getTemperature();
-    // Serial.println(CO2);
-    // Serial.println(temp);
-    Serial.println((String)mySensor.getCO2());
-    //sws.print((String)temp);
+
+    float CO2 = mySensor.getCO2();
+    Serial.println((String)CO2);
+    // SHTC3_Status_TypeDef result = mySensor2.update();             // Call "update()" to command a measurement, wait for measurement to complete, and update the RH and T members of the object
+    // printInfo();
 
   }
-  else
-    //Serial.println(F("."));
+
+ 
+                                               // This function is used to print a nice little line of info to the serial port    
+  
 
   delay(1000);
+}
+
+
+void printInfo()
+{
+  if(mySensor2.lastStatus == SHTC3_Status_Nominal)              // You can also assess the status of the last command by checking the ".lastStatus" member of the object
+  {
+    Serial.print("RH = "); 
+    Serial.print(mySensor2.toPercent());                        // "toPercent" returns the percent humidity as a floating point number
+    Serial.print("%, T = "); 
+    Serial.print(mySensor2.toDegF());                           // "toDegF" and "toDegC" return the temperature as a flaoting point number in deg F and deg C respectively 
+    Serial.println(" deg F"); 
+  }
+  
 }
