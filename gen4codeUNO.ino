@@ -44,6 +44,16 @@ void loop()
 
     float CO2 = mySensor.getCO2();
     Serial.println((String)CO2);
+<<<<<<< Updated upstream
+=======
+
+    // int batteryVoltage = analogRead(A1);
+    // float hi = (batteryVoltage * 5 * 7.3) / 1024.0;
+    // Serial.print("[battery=");
+    // Serial.print(hi);
+    // Serial.println("]");
+
+>>>>>>> Stashed changes
     // SHTC3_Status_TypeDef result = mySensor2.update();             // Call "update()" to command a measurement, wait for measurement to complete, and update the RH and T members of the object
     // printInfo();
 

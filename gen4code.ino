@@ -91,6 +91,7 @@ void loop() {
       if (fixedSweep) {
         sweep2 = fixed;
       }
+
       Serial.print("[sweep=");
       Serial.print((String)sweep2);
       Serial.print("]");
@@ -101,8 +102,15 @@ void loop() {
       elapsed = millis()/1000;
       Serial.print("[elapsed=");
       Serial.print((String)elapsed);
-      Serial.println("]");
+      Serial.print("]");
       mfc1.setFlow(sweep2 / 10);
+
+      int batteryVoltage = analogRead(A0);
+      float hi = (batteryVoltage * 5 * 7.3) / 1024.0;
+      Serial.print("[battery=");
+      Serial.print(hi);
+      Serial.println("]");
+
       looped = true;
     }
   }
