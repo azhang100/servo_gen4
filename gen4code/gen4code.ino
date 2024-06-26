@@ -189,7 +189,7 @@ void parseData() {  // split the data into its parts
 
   String abc(tempChars);
 
-  if (abc == "tEGCO2") {
+  if (abc == "tegco2") {
     tegco2 = changeVal;
   } else if (abc == "sweep") {
     fixed = changeVal;
@@ -201,7 +201,14 @@ void parseData() {  // split the data into its parts
     }
   } else if (abc == "clear"){
       blast();
+  } else if (abc == "sweepP"){
+      Kp = changeVal;
+  } else if (abc == "sweepI"){
+      Ki = changeVal;
+  } else if (abc == "sweepD"){
+      Kd = changeVal;
   }
+
   // strtokIndx = strtok(NULL, ",");
   // floatFromPC = atof(strtokIndx);  // convert this part to a float
 }
@@ -220,10 +227,10 @@ void showNewNumber() {
     dataNumber = atof(receivedChars);
     dataNumber = dataNumber * 7.6;  // THIS IS THE VALUE TO FILTER 
     currCO2c = dataNumber;
-    Serial.print("[EGCO2=");
+    Serial.print("[egco2=");
     Serial.print(dataNumber);
     Serial.print("]");
-    Serial.print("[tEGCO2=");
+    Serial.print("[tegco2=");
     Serial.print(tegco2);
     Serial.print("]");
     //Serial.println(dataNumber);
