@@ -101,9 +101,15 @@ void loop() {
       elapsed = millis()/1000;
       Serial.print("[elapsed=");
       Serial.print((String)elapsed);
-      Serial.println("]");
+      Serial.print("]");
       mfc1.setFlow(sweep2 / 10);
       looped = true;
+      float battery = analogRead(A0);
+      battery = (battery * 5*7.3) / 1024.0;
+      Serial.print("[battery=");
+      Serial.print((String)battery);
+      Serial.println("]");
+
     }
   }
 }
@@ -154,6 +160,28 @@ void recvWithStartEndMarkers() {
 
   while (Serial.available() > 0 && newData == false) {
     rc = Serial.read();
+
+    if (recvInProgress == true) {
+      if (rc != endMarker) {
+        receivedChars[ndx] = rc;
+        ndx++;
+        if (ndx >= numChars) {
+          ndx = numChars - 1;
+        }
+      } else {
+        receivedChars[ndx] = '\0';  // terminate the string
+        recvInProgress = false;
+        ndx = 0;
+        newData = true;
+      }
+    }
+
+    else if (rc == startMarker) {
+      recvInProgress = true;
+    }
+  }
+  while (Serial2.available() > 0 && newData == false) {
+    rc = Serial2.read();
 
     if (recvInProgress == true) {
       if (rc != endMarker) {
