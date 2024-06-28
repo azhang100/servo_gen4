@@ -25,10 +25,10 @@ float PIDloop (float currCO2, int tegco2, float Kp, float Ki, float Kd){
     prop = Kp * (currCO2-tegco2); // 60
     integral += Ki * (millis() - currTime) * (currCO2-tegco2); //66
     //Serial.begin(9600);
-    Serial.print("Deriv="); Serial.print(deriv); Serial.print("");
-    Serial.print("Error="); Serial.print(error); Serial.print("");
-    Serial.print("Prop="); Serial.print(prop); Serial.print("");
-    Serial.print("Integral="); Serial.print(integral); Serial.print("");
+    Serial.print("{Deriv="); Serial.print(deriv); Serial.print("}");
+    Serial.print("{Error="); Serial.print(error); Serial.print("}");
+    Serial.print("{Prop="); Serial.print(prop); Serial.print("}");
+    Serial.print("{Integral="); Serial.print(integral); Serial.print("}");
 
  
     currTime=millis();

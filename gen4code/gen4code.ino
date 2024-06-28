@@ -91,17 +91,17 @@ void loop() {
       if (fixedSweep) {
         sweep2 = fixed;
       }
-      Serial.print("[sweep=");
+      Serial.print("[tSweep=");
       Serial.print((String)sweep2);
       Serial.print("]");
-      Serial.print("[loops=");
+      Serial.print("{loops=");
       Serial.print((String)loops);
-      Serial.print("]");
+      Serial.print("}");
       loops++;
       elapsed = millis()/1000;
-      Serial.print("[elapsed=");
+      Serial.print("{elapsed=");
       Serial.print((String)elapsed);
-      Serial.print("]");
+      Serial.print("}");
       mfc1.setFlow(sweep2 / 10);
       looped = true;
       float battery = analogRead(A0);
@@ -219,7 +219,7 @@ void parseData() {  // split the data into its parts
 
   if (abc == "tegco2") {
     tegco2 = changeVal;
-  } else if (abc == "sweep") {
+  } else if (abc == "tSweep") {
     if(changeVal == -1){
       fixedSweep = false;
     }
