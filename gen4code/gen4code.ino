@@ -53,9 +53,10 @@ void setup() {
 
   PIDsetup();
   Serial.begin(9600);
+  Serial.print("Serial online");
   Serial1.begin(9600);
   Serial2.begin(9600);
-  Serial2.print("hello world");
+  Serial2.print("Serial2 online");
 
 }
 
@@ -68,7 +69,6 @@ void loop() {
       parseData();
       newData = false;
     }
-
 
     if (Serial1.available() > 0) {
 
@@ -247,8 +247,8 @@ void showNewNumber() {
     dataNumber = 0.000;
     dataNumber = atof(receivedChars);
     dataNumber = dataNumber * 7.6;  // THIS IS THE VALUE TO FILTER 
-    currCO2c = dataNumber;
-    sendCommand("egco2", (String)dataNumber);
+    currCO2c = dataNumber +7;
+    sendCommand("egco2", (String)currCO2c);
     sendCommand("tegco2", (String)tegco2);
     
     newData = false;
