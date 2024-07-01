@@ -68,6 +68,8 @@ void loop() {
       strcpy(tempChars, receivedChars);
       parseData();
       newData = false;
+    } else {
+      //Serial.println("no data");
     }
 
     if (Serial1.available() > 0) {
@@ -81,17 +83,19 @@ void loop() {
 
       sweep2 = PIDloop(currCO2c, tegco2, Kp, Ki, Kd);
       float temp = 0;
-      if(loops % 900 == 899){
-        temp = mfc1.getFlow();
-        mfc1.setFlow(2);
-        delay(500);
-        mfc1.setFlow(temp);
-        sweep2 = 20;
-      }
+      
       
       if (fixedSweep) {
         sweep2 = fixed;
       }
+
+      // if(loops % 400 == 399){
+      //   temp = mfc1.getFlow();
+      //   mfc1.setFlow(2);
+      //   delay(800);
+      //   mfc1.setFlow(temp);
+      //   sweep2 = 20;
+      // }
       sendCommand("tSweep", (String)sweep2);
       sendCommand("loops", (String)loops);
       loops++;
@@ -103,6 +107,7 @@ void loop() {
       battery = (battery * 5*7.3) / 1024.0;
       sendCommand("battery",(String)battery);
       Serial.println(); 
+      Serial2.println();
     }
   }
 }
@@ -247,7 +252,7 @@ void showNewNumber() {
     dataNumber = 0.000;
     dataNumber = atof(receivedChars);
     dataNumber = dataNumber * 7.6;  // THIS IS THE VALUE TO FILTER 
-    currCO2c = dataNumber +7;
+    currCO2c = dataNumber+50; //calibrate with room air
     sendCommand("egco2", (String)currCO2c);
     sendCommand("tegco2", (String)tegco2);
     
