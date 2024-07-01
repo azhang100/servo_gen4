@@ -5,7 +5,7 @@
 #include "Wire.h" // DOWNLOAD THIS YOURSELF
 #include "SparkFun_STC3x_Arduino_Library.h"  /// DOWNLOAD THIS YOURSELF
 #include "SoftwareSerial.h" // DOWNLOAD THIS YOURSELF
-
+#include "util.h"
 // SoftwareSerial sws2(10, 11);
 // SoftwareSerial sws1(12, 13);
 
@@ -55,6 +55,7 @@ void setup() {
   Serial.begin(9600);
   Serial1.begin(9600);
   Serial2.begin(9600);
+  Serial2.print("hello world");
 
 }
 
@@ -91,25 +92,17 @@ void loop() {
       if (fixedSweep) {
         sweep2 = fixed;
       }
-      Serial.print("[tSweep=");
-      Serial.print((String)sweep2);
-      Serial.print("]");
-      Serial.print("{loops=");
-      Serial.print((String)loops);
-      Serial.print("}");
+      sendCommand("tSweep", (String)sweep2);
+      sendCommand("loops", (String)loops);
       loops++;
       elapsed = millis()/1000;
-      Serial.print("{elapsed=");
-      Serial.print((String)elapsed);
-      Serial.print("}");
+      sendCommand("elapsed", (String)elapsed);
       mfc1.setFlow(sweep2 / 10);
       looped = true;
       float battery = analogRead(A0);
       battery = (battery * 5*7.3) / 1024.0;
-      Serial.print("[battery=");
-      Serial.print((String)battery);
-      Serial.println("]");
-
+      sendCommand("battery",(String)battery);
+      Serial.println(); 
     }
   }
 }
@@ -255,13 +248,9 @@ void showNewNumber() {
     dataNumber = atof(receivedChars);
     dataNumber = dataNumber * 7.6;  // THIS IS THE VALUE TO FILTER 
     currCO2c = dataNumber;
-    Serial.print("[egco2=");
-    Serial.print(dataNumber);
-    Serial.print("]");
-    Serial.print("[tegco2=");
-    Serial.print(tegco2);
-    Serial.print("]");
-    //Serial.println(dataNumber);
+    sendCommand("egco2", (String)dataNumber);
+    sendCommand("tegco2", (String)tegco2);
+    
     newData = false;
     looped = false;
   }
