@@ -46,7 +46,9 @@ float fixed = 0.0;
 bool newData = false;
 bool looped = false;
 bool fixedSweep = false;
+bool resetI = false;
 String unitID = "A";
+String currTime = "";
 
 
 void setup() {
@@ -81,7 +83,8 @@ void loop() {
         continue;
       }
 
-      sweep2 = PIDloop(currCO2c, tegco2, Kp, Ki, Kd);
+      sweep2 = PIDloop(currCO2c, tegco2, Kp, Ki, Kd, resetI);
+      resetI = false;
       float temp = 0;
       
       
@@ -111,15 +114,6 @@ void loop() {
     }
   }
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -220,6 +214,7 @@ void parseData() {  // split the data into its parts
   } else if (abc == "tSweep") {
     if(changeVal == -1){
       fixedSweep = false;
+      resetI =  true;
     }
     else{
       fixedSweep = true;
@@ -233,7 +228,12 @@ void parseData() {  // split the data into its parts
       Ki = changeVal;
   } else if (abc == "sweepD"){
       Kd = changeVal;
+  } else if (abc == "resetI"){
+      if(changeVal == 1){
+        resetI = true;
+      }
   }
+
 
   // strtokIndx = strtok(NULL, ",");
   // floatFromPC = atof(strtokIndx);  // convert this part to a float
