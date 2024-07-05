@@ -92,13 +92,6 @@ void loop() {
         sweep2 = fixed;
       }
 
-      // if(loops % 400 == 399){
-      //   temp = mfc1.getFlow();
-      //   mfc1.setFlow(2);
-      //   delay(800);
-      //   mfc1.setFlow(temp);
-      //   sweep2 = 20;
-      // }
       sendCommand("tSweep", (String)sweep2);
       sendCommand("loops", (String)loops);
       loops++;
