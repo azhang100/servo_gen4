@@ -48,7 +48,7 @@ bool looped = false;
 bool fixedSweep = false;
 bool resetI = false;
 String unitID = "A";
-String currTime = "";
+//String currTime = "";
 
 
 void setup() {
@@ -63,16 +63,14 @@ void setup() {
 }
 
 void loop() {
-  while (true) {
 
     recvWithStartEndMarkers();
+
     if (newData == true) {
       strcpy(tempChars, receivedChars);
       parseData();
       newData = false;
-    } else {
-      //Serial.println("no data");
-    }
+    } 
 
     if (Serial1.available() > 0) {
 
@@ -97,15 +95,17 @@ void loop() {
       loops++;
       elapsed = millis()/1000;
       sendCommand("elapsed", (String)elapsed);
+      
       mfc1.setFlow(sweep2 / 10);
       looped = true;
       float battery = analogRead(A0);
       battery = (battery * 5*7.3) / 1024.0;
+
       sendCommand("battery",(String)battery);
       Serial.println(); 
       Serial2.println();
     }
-  }
+  
 }
 
 
@@ -225,7 +225,12 @@ void parseData() {  // split the data into its parts
       if(changeVal == 1){
         resetI = true;
       }
+  } else if (abc == "time"){
+    sendCommand("time", (String)(int)changeVal);
+    Serial.println("");
+
   }
+
 
 
   // strtokIndx = strtok(NULL, ",");
