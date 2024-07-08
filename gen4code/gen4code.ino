@@ -64,6 +64,8 @@ void setup() {
 
 void loop() {
 
+  while(true){
+
     recvWithStartEndMarkers();
 
     if (newData == true) {
@@ -105,7 +107,7 @@ void loop() {
       Serial.println(); 
       Serial2.println();
     }
-  
+  }
 }
 
 
