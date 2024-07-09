@@ -100,10 +100,10 @@ void loop() {
       
       mfc1.setFlow(sweep2 / 10);
       looped = true;
-      float battery = analogRead(A0);
-      battery = (battery * 5*7.3) / 1024.0;
+      // float battery = analogRead(A0);
+      // battery = (battery * 5*7.3) / 1024.0;
 
-      sendCommand("battery",(String)battery);
+      // sendCommand("battery",(String)battery);
       Serial.println(); 
       Serial2.println();
     }

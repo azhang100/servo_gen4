@@ -9,8 +9,8 @@ void setup()
   Serial.begin(9600);
   Wire.begin();
 
-  //mySensor.enableDebugging(); // Uncomment this line to get helpful debug messages on Serial
-
+  mySensor.enableDebugging(); // Uncomment this line to get helpful debug messages on Serial
+  Serial.print("Serial online");
   if (mySensor.begin() == false)
   {
     Serial.println(F("Sensor not detected. Please check wiring. Freezing..."));
@@ -31,7 +31,10 @@ void setup()
     while (1)
       ;
   }
+  Serial.print("hi");
 }
+
+
 
 void loop()
 {
