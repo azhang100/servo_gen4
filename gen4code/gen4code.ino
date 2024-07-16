@@ -61,7 +61,6 @@ void setup() {
   Serial1.begin(9600);
   Serial2.begin(9600);
   Serial2.print("Serial2 online");
-  rtcsetup();
 }
 
 void loop() {
@@ -101,15 +100,11 @@ void loop() {
 
       mfc1.setFlow(sweep2 / 10);
       looped = true;
-      // float battery = analogRead(A0);
-      // battery = (battery * 5*7.3) / 1024.0;
-
-      // sendCommand("battery",(String)battery);
+      
       Serial.println();
       Serial2.println();
     }
   }
-  rtc_write();
 }
 
 
@@ -252,7 +247,7 @@ void showNewNumber() {
     dataNumber = 0.000;
     dataNumber = atof(receivedChars);
     dataNumber = dataNumber * 7.6;  // THIS IS THE VALUE TO FILTER
-    currCO2c = dataNumber + 50;     //calibrate with room air
+    currCO2c = dataNumber + 9;     //calibrate with room air
     sendCommand("egco2", (String)currCO2c);
     sendCommand("tegco2", (String)tegco2);
 
