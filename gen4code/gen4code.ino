@@ -1,11 +1,13 @@
-#include "Arduino.h" // DOWNLOAD THIS YOURSELF
-#include "co2measure.h" 
+#include "Arduino.h"  // DOWNLOAD THIS YOURSELF
+#include "co2measure.h"
 #include "pidfunction.h"
 #include "MFCSerial.h"
-#include "Wire.h" // DOWNLOAD THIS YOURSELF
+#include "Wire.h"                            // DOWNLOAD THIS YOURSELF
 #include "SparkFun_STC3x_Arduino_Library.h"  /// DOWNLOAD THIS YOURSELF
-#include "SoftwareSerial.h" // DOWNLOAD THIS YOURSELF
+#include "SoftwareSerial.h"                  // DOWNLOAD THIS YOURSELF
 #include "util.h"
+#include "SD_setup.h"
+
 // SoftwareSerial sws2(10, 11);
 // SoftwareSerial sws1(12, 13);
 
@@ -59,12 +61,12 @@ void setup() {
   Serial1.begin(9600);
   Serial2.begin(9600);
   Serial2.print("Serial2 online");
-
+  rtcsetup();
 }
 
 void loop() {
 
-  while(true){
+  while (true) {
 
     recvWithStartEndMarkers();
 
@@ -72,7 +74,7 @@ void loop() {
       strcpy(tempChars, receivedChars);
       parseData();
       newData = false;
-    } 
+    }
 
     if (Serial1.available() > 0) {
 
@@ -86,28 +88,28 @@ void loop() {
       sweep2 = PIDloop(currCO2c, tegco2, Kp, Ki, Kd, resetI);
       resetI = false;
       float temp = 0;
-      
-      
+
+
       if (fixedSweep) {
         sweep2 = fixed;
       }
-
       sendCommand("tSweep", (String)sweep2);
       sendCommand("loops", (String)loops);
       loops++;
-      elapsed = millis()/1000;
+      elapsed = millis() / 1000;
       sendCommand("elapsed", (String)elapsed);
-      
+
       mfc1.setFlow(sweep2 / 10);
       looped = true;
       // float battery = analogRead(A0);
       // battery = (battery * 5*7.3) / 1024.0;
 
       // sendCommand("battery",(String)battery);
-      Serial.println(); 
+      Serial.println();
       Serial2.println();
     }
   }
+  rtc_write();
 }
 
 
@@ -207,30 +209,28 @@ void parseData() {  // split the data into its parts
   if (abc == "tegco2") {
     tegco2 = changeVal;
   } else if (abc == "tSweep") {
-    if(changeVal == -1){
+    if (changeVal == -1) {
       fixedSweep = false;
-      resetI =  true;
-    }
-    else{
+      resetI = true;
+    } else {
       fixedSweep = true;
       fixed = changeVal;
     }
-  } else if (abc == "clear"){
-      blast();
-  } else if (abc == "sweepP"){
-      Kp = changeVal;
-  } else if (abc == "sweepI"){
-      Ki = changeVal;
-  } else if (abc == "sweepD"){
-      Kd = changeVal;
-  } else if (abc == "resetI"){
-      if(changeVal == 1){
-        resetI = true;
-      }
-  } else if (abc == "time"){
+  } else if (abc == "clear") {
+    blast();
+  } else if (abc == "sweepP") {
+    Kp = changeVal;
+  } else if (abc == "sweepI") {
+    Ki = changeVal;
+  } else if (abc == "sweepD") {
+    Kd = changeVal;
+  } else if (abc == "resetI") {
+    if (changeVal == 1) {
+      resetI = true;
+    }
+  } else if (abc == "time") {
     sendCommand("time", (String)(int)changeVal);
     Serial.println("");
-
   }
 
 
@@ -240,7 +240,7 @@ void parseData() {  // split the data into its parts
 }
 
 
-void blast(){
+void blast() {
   float temp = mfc1.getFlow();
   mfc1.setFlow(2);
   delay(1000);
@@ -251,11 +251,11 @@ void showNewNumber() {
   if (newData == true) {
     dataNumber = 0.000;
     dataNumber = atof(receivedChars);
-    dataNumber = dataNumber * 7.6;  // THIS IS THE VALUE TO FILTER 
-    currCO2c = dataNumber+50; //calibrate with room air
+    dataNumber = dataNumber * 7.6;  // THIS IS THE VALUE TO FILTER
+    currCO2c = dataNumber + 50;     //calibrate with room air
     sendCommand("egco2", (String)currCO2c);
     sendCommand("tegco2", (String)tegco2);
-    
+
     newData = false;
     looped = false;
   }
