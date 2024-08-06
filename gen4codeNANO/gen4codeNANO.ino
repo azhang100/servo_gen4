@@ -31,7 +31,8 @@ void setup()
     while (1)
       ;
   }
-  Serial.print("hi");
+  //Serial.print("hi");
+  delay(2000);
 }
 
 
@@ -50,8 +51,9 @@ void loop()
     //sws.print((String)temp);
 
   }
-  else
+  delay(1010);
+  
     //Serial.println(F("."));
 
-  delay(1000);
+  
 }

@@ -2,12 +2,14 @@
 #define Util_h  // disabled (swap order of define and ifndef)
 
 
+
 #include "Arduino.h"
 #include <SPI.h>
 #include <SD.h>
 #include <Wire.h>
 #include "RTClib.h"
 #include "SD_setup.h"
+#include "Serial_multiplexer.h"
 
 #define START_DELIM '['
 #define END_DELIM ']'
@@ -15,11 +17,10 @@
 
 //=======================Serial choose==================
 
-#define BTSERIAL Serial2  // long-range comms
+#define BTSERIAL Serial2 // long-range comms
 #define DBSERIAL Serial
 
 //=======================================================
-
 void setupComms();
 void acknowledgeCommand(String command, String arg);
 void sendCommand(const String& command, const String& arg);
@@ -27,16 +28,18 @@ void loopComms(){};
 
 //=======================================================
 
+SMP portSwitcher(&Serial2, 2, 9600);
+
 void setupComms() {
   DBSERIAL.print("setting up comms");
   DBSERIAL.println("set up BT");
   BTSERIAL.begin(9600);
   BTSERIAL.println("btSerial online");
-
   DBSERIAL.print("done");
 }
 
 void sendCommand(const String& command, const String& arg) {
+  portSwitcher.switchPort(2);
   BTSERIAL.print(START_DELIM);
   BTSERIAL.print(command);
   BTSERIAL.print(SPLIT_DELIM);

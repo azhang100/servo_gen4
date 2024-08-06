@@ -7,19 +7,19 @@
 #include "SoftwareSerial.h"                  // DOWNLOAD THIS YOURSELF
 #include "util.h"
 #include "SD_setup.h"
+//#include "Serial_multiplexer.h"
 
 // SoftwareSerial sws2(10, 11);
-// SoftwareSerial sws1(12, 13);
+//SoftwareSerial sws1(12, 13);
 
 
 
-MFCSerial mfc1(&Serial1);
+//MFCSerial mfc1(&Serial1);
+SMP mfc1(&Serial2, 1, 9600); // extends off serial port 1
+SMP CO2Sensor(&Serial2, 4, 9600);
+COZIR sensor1(&Serial2);
 
-
-
-//STC3x CO2Sensor;
-//COZIR sensor1(&sws1);
-// COZIR sensor2(&Serial2);
+//COZIR sensor2(&Serial2);
 
 #define START_DELIM '['
 #define END_DELIM ']'
@@ -33,6 +33,7 @@ char receivedChars[numChars];
 char tempChars[numChars];
 
 int tegco2 = 20;
+int prev = 0;
 long loops = 0;
 long elapsed = 0;
 float Kp = 0.1;
@@ -61,12 +62,24 @@ void setup() {
   Serial1.begin(9600);
   Serial2.begin(9600);
   Serial2.print("Serial2 online");
+  mfc1.switchPort(2); //multiplexer port 8
+  sensor1.CO2setup();
+  pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
+  
+  //digitalWrite(3, HIGH);
+
 }
 
 void loop() {
 
-  while (true) {
 
+  while (true) {
+    
+    //mfc1.setFlow(0.5);
+    CO2Sensor.switchPort(4);
+    double receivedCO2 = (sensor1.CO2loop() * 0.00076 * 12.38) - 1.9;
     recvWithStartEndMarkers();
 
     if (newData == true) {
@@ -77,12 +90,23 @@ void loop() {
 
     if (Serial1.available() > 0) {
 
+      
+
       recvWithEndMarker(&Serial1);
       showNewNumber();
+
+
+
 
       if (looped) {
         continue;
       }
+
+      sendCommand("altEgco2", (String)receivedCO2);
+            //ln((String)receivedCO2);
+      
+      //prev = sensor1.CO2loop(prev);
+
 
       sweep2 = PIDloop(currCO2c, tegco2, Kp, Ki, Kd, resetI);
       resetI = false;
@@ -92,6 +116,7 @@ void loop() {
       if (fixedSweep) {
         sweep2 = fixed;
       }
+      
       sendCommand("tSweep", (String)sweep2);
       sendCommand("loops", (String)loops);
       loops++;
@@ -164,28 +189,28 @@ void recvWithStartEndMarkers() {
       recvInProgress = true;
     }
   }
-  while (Serial2.available() > 0 && newData == false) {
-    rc = Serial2.read();
+  // while (Serial2.available() > 0 && newData == false) {
+  //   rc = Serial2.read();
 
-    if (recvInProgress == true) {
-      if (rc != endMarker) {
-        receivedChars[ndx] = rc;
-        ndx++;
-        if (ndx >= numChars) {
-          ndx = numChars - 1;
-        }
-      } else {
-        receivedChars[ndx] = '\0';  // terminate the string
-        recvInProgress = false;
-        ndx = 0;
-        newData = true;
-      }
-    }
+  //   if (recvInProgress == true) {
+  //     if (rc != endMarker) {
+  //       receivedChars[ndx] = rc;
+  //       ndx++;
+  //       if (ndx >= numChars) {
+  //         ndx = numChars - 1;
+  //       }
+  //     } else {
+  //       receivedChars[ndx] = '\0';  // terminate the string
+  //       recvInProgress = false;
+  //       ndx = 0;
+  //       newData = true;
+  //     }
+  //   }
 
-    else if (rc == startMarker) {
-      recvInProgress = true;
-    }
-  }
+  //   else if (rc == startMarker) {
+  //     recvInProgress = true;
+  //   }
+  // }
 }
 
 
@@ -250,6 +275,8 @@ void showNewNumber() {
     currCO2c = dataNumber + 9;     //calibrate with room air
     sendCommand("egco2", (String)currCO2c);
     sendCommand("tegco2", (String)tegco2);
+    // Serial.print((String)currCO2c);
+    // Serial.print(",");
 
     newData = false;
     looped = false;
