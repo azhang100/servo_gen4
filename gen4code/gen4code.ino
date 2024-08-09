@@ -6,7 +6,7 @@
 #include "SparkFun_STC3x_Arduino_Library.h"  /// DOWNLOAD THIS YOURSELF
 #include "SoftwareSerial.h"                  // DOWNLOAD THIS YOURSELF
 #include "util.h"
-#include "SD_setup.h"
+#include "rtcsetup.h"
 //#include "Serial_multiplexer.h"
 
 // SoftwareSerial sws2(10, 11);
@@ -67,16 +67,15 @@ void setup() {
   pinMode(2, OUTPUT);
   pinMode(3, OUTPUT);
   pinMode(4, OUTPUT);
-  
+  setrtc();
   //digitalWrite(3, HIGH);
 
 }
 
 void loop() {
 
-
   while (true) {
-    
+    printtime();
     //mfc1.setFlow(0.5);
     CO2Sensor.switchPort(4);
     double receivedCO2 = (sensor1.CO2loop() * 0.00076 * 12.38) - 1.9;
@@ -88,7 +87,7 @@ void loop() {
       newData = false;
     }
 
-    if (Serial1.available() > 0) {
+    //if (Serial1.available() > 0) {
 
       
 
@@ -128,7 +127,7 @@ void loop() {
       
       Serial.println();
       Serial2.println();
-    }
+    //}
   }
 }
 

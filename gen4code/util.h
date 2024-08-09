@@ -8,7 +8,6 @@
 #include <SD.h>
 #include <Wire.h>
 #include "RTClib.h"
-#include "SD_setup.h"
 #include "Serial_multiplexer.h"
 
 #define START_DELIM '['
@@ -50,11 +49,6 @@ void sendCommand(const String& command, const String& arg) {
   DBSERIAL.print(SPLIT_DELIM);
   DBSERIAL.print(arg);
   DBSERIAL.print(END_DELIM);
-  logFile.print(START_DELIM);
-  logFile.print(command);
-  logFile.print(SPLIT_DELIM);
-  logFile.print(arg);
-  logFile.print(END_DELIM);
 }
 
 void acknowledgeCommand(String command, String arg) {
