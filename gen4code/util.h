@@ -49,6 +49,15 @@ void sendCommand(const String& command, const String& arg) {
   DBSERIAL.print(SPLIT_DELIM);
   DBSERIAL.print(arg);
   DBSERIAL.print(END_DELIM);
+<<<<<<< HEAD
+=======
+  logFile.print(START_DELIM);
+  logFile.print(command);
+  logFile.print(SPLIT_DELIM);
+  logFile.print(arg);
+  logFile.print(END_DELIM);
+  delay(100);
+>>>>>>> eadc0ec1fbbb36599b762ec94a3a0e6c96d23c4b
 }
 
 void acknowledgeCommand(String command, String arg) {

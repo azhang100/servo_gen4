@@ -121,11 +121,16 @@ void loop() {
       loops++;
       elapsed = millis() / 1000;
       sendCommand("elapsed", (String)elapsed);
-
+      if(loops % 1800 == 1799){
+        blast();
+      } //every 30 mins
       mfc1.setFlow(sweep2 / 10);
+      delay(200);
       looped = true;
       
       Serial.println();
+      mfc1.switchPort(2);
+      delay(100);
       Serial2.println();
     //}
   }
