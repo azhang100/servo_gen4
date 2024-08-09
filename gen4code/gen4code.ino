@@ -87,7 +87,7 @@ void loop() {
       newData = false;
     }
 
-    //if (Serial1.available() > 0) {
+    if (Serial1.available() > 0) {
 
       
 
@@ -129,10 +129,8 @@ void loop() {
       looped = true;
       
       Serial.println();
-      mfc1.switchPort(2);
-      delay(100);
-      Serial2.println();
-    //}
+      Serial3.println();
+    }
   }
 }
 
