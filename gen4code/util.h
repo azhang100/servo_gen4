@@ -55,6 +55,7 @@ void sendCommand(const String& command, const String& arg) {
   logFile.print(SPLIT_DELIM);
   logFile.print(arg);
   logFile.print(END_DELIM);
+  delay(100);
 }
 
 void acknowledgeCommand(String command, String arg) {
