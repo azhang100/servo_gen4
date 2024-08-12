@@ -7,7 +7,7 @@
 #include <SPI.h>
 #include <SD.h>
 #include <Wire.h>
-#include "RTClib.h"
+#include "rtcsetup.h"
 #include "Serial_multiplexer.h"
 
 #define START_DELIM '['
