@@ -2,6 +2,7 @@
 #include "co2measure.h"
 #include "pidfunction.h"
 #include "MFCSerial.h"
+<<<<<<< Updated upstream
 #include "Wire.h"
 #include "SparkFun_STC3x_Arduino_Library.h"  //Click here to get the library: http://librarymanager/All#SparkFun_STC3x
 #include "SoftwareSerial.h"
@@ -18,35 +19,40 @@ MFCSerial mfc1(&Serial1);
 //STC3x CO2Sensor;
 //COZIR sensor1(&sws1);
 // COZIR sensor2(&Serial2);
+=======
+#include "Wire.h"                            // DOWNLOAD THIS YOURSELF
+#include "SparkFun_STC3x_Arduino_Library.h"  /// DOWNLOAD THIS YOURSELF
+#include "SoftwareSerial.h"                  // DOWNLOAD THIS YOURSELF
+#include "util.h"
+#include "rtcsetup.h"
+>>>>>>> Stashed changes
 
 #define START_DELIM '['
 #define END_DELIM ']'
 #define SPLIT_DELIM '='
 
-const byte numChars = 32;
-String toChange;
+SMP mfc1(&Serial2, 1, 9600); 
+SMP CO2Sensor(&Serial2, 4, 9600);
+COZIR sensor1(&Serial2);
 
-char receivedChars[numChars];
-//char toChange[numChars];
-char tempChars[numChars];
-
+char receivedChars[32];
+char tempChars[32];
 int tegco2 = 20;
 long loops = 0;
 long elapsed = 0;
 float Kp = 0.1;
 float Ki = 0.000002;
 float Kd = 0;  //tuning
-float currCO2a;
-float currCO2b;
-float currCO2c;
 float sweep2 = 5;  //CHANGE VALUE FOR FIXED SWEEP
-float dataNumber = 0.0;
-float changeVal;
 float fixed = 0.0;
 bool newData = false;
 bool looped = false;
 bool fixedSweep = false;
+<<<<<<< Updated upstream
 String unitID = "A";
+=======
+bool resetI = false;
+>>>>>>> Stashed changes
 
 
 void setup() {
@@ -55,20 +61,37 @@ void setup() {
   Serial.begin(9600);
   Serial1.begin(9600);
   Serial2.begin(9600);
+<<<<<<< Updated upstream
+=======
+  Serial2.print("Serial2 online");
+  mfc1.switchPort(2); 
+  sensor1.CO2setup();
+  pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
+  setrtc();
+>>>>>>> Stashed changes
 
 }
 
 void loop() {
   while (true) {
 
+<<<<<<< Updated upstream
     recvWithStartEndMarkers();
     if (newData == true) {
       strcpy(tempChars, receivedChars);
       parseData();
       newData = false;
     }
+=======
+    printtime();
+    recvUserInput();
+    
+>>>>>>> Stashed changes
 
 
+<<<<<<< Updated upstream
     if (Serial1.available() > 0) {
 
       recvWithEndMarker(&Serial1);
@@ -112,12 +135,50 @@ void loop() {
       Serial.println("]");
 
       looped = true;
+=======
+      float egco2 = getEGCO2(&Serial1);
+      CO2Sensor.switchPort(4);
+      double egco2_alt = (sensor1.CO2loop() * 0.00076 * 12.38) - 1.9;
+  
+      if (looped) { //prevents too many readings at once
+        continue;
+      }
+
+      sweep2 = PIDloop(receivedCO2, tegco2, Kp, Ki, Kd, &resetI) * 10;
+     
+      if(loops % 1800 == 1799){ // every 30 mins
+        blast();
+      } 
+
+      if(fixedSweep){
+        sweep2 = fixed*10;
+      } 
+      
+        mfc1.setFlow(sweep2);
+        delay(200);
+
+      
+      looped = true;
+
+      elapsed = millis() / 1000;
+      sendCommand("egco2", (String)egco2);
+      sendCommand("tegco2", (String)tegco2);
+      sendCommand("ALTegco2", (String)egco2_alt);
+      sendCommand("tSweep", (String)sweep2);
+      sendCommand("loops", (String)loops);
+      sendCommand("elapsed", (String)elapsed);
+      Serial.println();
+      Serial3.println();
+      loops++;
+
+>>>>>>> Stashed changes
     }
   }
 }
 
 
 
+<<<<<<< Updated upstream
 
 
 
@@ -128,6 +189,9 @@ void loop() {
 
 
 float recvWithEndMarker(HardwareSerial *port) {
+=======
+void getEGCO2(HardwareSerial *port) {
+>>>>>>> Stashed changes
   static byte ndx = 0;
   char endMarker = '\n';
   char rc;
@@ -146,14 +210,23 @@ float recvWithEndMarker(HardwareSerial *port) {
       ndx = 0;
       newData = true;
     }
-    return atof(receivedChars);
   }
-  return 0;
+  if (newData == true) {
+    float dataNumber = 0.000;
+    dataNumber = atof(receivedChars);
+    dataNumber = dataNumber * 7.6;  // THIS IS THE VALUE TO FILTER
+    dataNumber = dataNumber + 9;     //calibrate with room air
+    newData = false;
+    looped = false;
+  }
+
+  return dataNumber;
+  
 }
 
 
 
-void recvWithStartEndMarkers() {
+void recvUserInput() {
   static boolean recvInProgress = false;
   static byte ndx = 0;
   char startMarker = '[';
@@ -182,11 +255,22 @@ void recvWithStartEndMarkers() {
       recvInProgress = true;
     }
   }
+<<<<<<< Updated upstream
+=======
+
+  if (newData == true) {
+      strcpy(tempChars, receivedChars);
+      parseData();
+      newData = false;
+    }
+
+>>>>>>> Stashed changes
 }
 
 
 void parseData() {  // split the data into its parts
 
+  float changeVal;
   char *strtokIndx;  // this is used by strtok() as an index
 
   strtokIndx = strtok(tempChars, "=");  // get the first part - the string
@@ -210,8 +294,11 @@ void parseData() {  // split the data into its parts
   } else if (abc == "clear"){
       blast();
   }
+<<<<<<< Updated upstream
   // strtokIndx = strtok(NULL, ",");
   // floatFromPC = atof(strtokIndx);  // convert this part to a float
+=======
+>>>>>>> Stashed changes
 }
 
 
@@ -222,6 +309,7 @@ void blast(){
   mfc1.setFlow(temp);
 }
 
+<<<<<<< Updated upstream
 void showNewNumber() {
   if (newData == true) {
     dataNumber = 0.000;
@@ -239,3 +327,6 @@ void showNewNumber() {
     looped = false;
   }
 }
+=======
+
+>>>>>>> Stashed changes
