@@ -17,7 +17,6 @@ number of applications.
 #ifndef co2measure_h
 #define co2measure_h
 
-//#include "Serial_multiplexer.h"
 #include <SoftwareSerial.h>
 
 class COZIR{
@@ -34,7 +33,6 @@ private:
   uint8_t index = 0;
   SoftwareSerial *mySerial;
   HardwareSerial *mySerial2;
-  //SMP multi(&Serial2, 1, 9600);
   bool hardware = false;
   // double fill_buffer(); // function prototypes here
   // double format_output();
@@ -76,7 +74,7 @@ public:
 
 
   double CO2loop() {
-    //multi.switchPort(port);
+
     //Serial.print("HI");
     fill_buffer(); // function call that reacds CO2 sensor and fills buffer
     //Serial.print("Buffer contains: ");
@@ -125,7 +123,7 @@ public:
       ind = ind -2; // decrement buffer to exactly match last numerical character
   }
 
-  double format_output(){ // read buffer, extract 6 ASCII chars, convert to PPM and print
+  double format_output(void){ // read buffer, extract 6 ASCII chars, convert to PPM and print
     co2 = buffer[15-index]-0x30;
     co2 = co2+((buffer[14-index]-0x30)*10);
     co2 +=(buffer[13-index]-0x30)*100;
@@ -138,9 +136,7 @@ public:
   // Serial.print("\n");
     //delay(200);
     //Serial.println(co2);
-    // if(co2 < 0 || co2 > 10000){
-    //   return 0;
-    // }
+    
     return co2;
   }
 
