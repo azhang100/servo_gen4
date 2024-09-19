@@ -81,21 +81,33 @@ float PIDloop (float currCO2, int tegco2, float Kp, float Ki, float Kd, bool* re
     
     integral += Ki * (millis() - currTime) * (currCO2-tegco2); //66
     if (reset) {integral = 0;}
+<<<<<<< Updated upstream
+=======
+    //Serial.begin(9600);
+
+>>>>>>> Stashed changes
 
     Serial.print("[sweepP="); Serial.print(prop); Serial.print("]");
     Serial.print("[sweepI="); Serial.print(integral); Serial.print("]");
     Serial.print("[sweepD="); Serial.print(deriv); Serial.print("]");
     Serial.print("[sweepE="); Serial.print(error); Serial.print("]");
+<<<<<<< Updated upstream
+=======
+    // Serial1.print("[sweepP="); Serial.print(prop); Serial.print("]");
+    // Serial1.print("[sweepI="); Serial.print(integral); Serial.print("]");
+    // Serial1.print("[sweepD="); Serial.print(deriv); Serial.print("]");
+    // Serial1.print("[sweepE="); Serial.print(error); Serial.print("]");
+>>>>>>> Stashed changes
 
  
     currTime=millis();
 
     sweep = deriv + integral + prop; //66
   
-    if (sweep < 0.5){
+    if (sweep < 0.7){
       //integral = (0.5-(error-Kp));
       //integral += 1;
-      sweep = 0.5;
+      sweep = 0.7;
     }
     if (sweep > 20){
       //integral = (5-(error*Kp));
