@@ -10,7 +10,7 @@
 #define MFCSerial_h
 #endif
 
-//#include <Serial_multiplexer.h>
+
 #include <inttypes.h>
 #include <Wire.h>
 #include "Print.h"
@@ -28,11 +28,10 @@ public:
 
   // MFC compatible functions
   void setFlow(float flow);
-  void setFlowMP(float flow, HardwareSerial *p);
   void setupFlow(int baud, float max=5.0, String ID="A");
   float getFlow();
 
-
+private:
   SoftwareSerial* portS;
   HardwareSerial* port;
   String unitID = "A";

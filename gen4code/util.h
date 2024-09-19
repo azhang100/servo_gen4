@@ -7,7 +7,7 @@
 #include <SPI.h>
 #include <SD.h>
 #include <Wire.h>
-#include "rtcsetup.h"
+//#include "rtcsetup.h"
 #include "Serial_multiplexer.h"
 
 #define START_DELIM '['
@@ -16,7 +16,7 @@
 
 //=======================Serial choose==================
 
-#define BTSERIAL Serial3 // long-range comms
+#define BTSERIAL Serial1 // long-range comms
 #define DBSERIAL Serial
 
 //=======================================================
