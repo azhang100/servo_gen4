@@ -19,14 +19,14 @@ void PIDsetup(){
   error = 0;
 }
 
-float PIDloop (float currCO2, int tegco2, float Kp, float Ki, float Kd, bool* reset){
+float PIDloop (float currCO2, int tegco2, float Kp, float Ki, float Kd, bool reset){
     deriv = Kd * (currCO2-tegco2-error)/(millis()-currTime);                // neg small number
     error = currCO2-tegco2; //  60
     prop = Kp * (currCO2-tegco2); // 60
     
     integral += Ki * (millis() - currTime) * (currCO2-tegco2); //66
     if (reset) {integral = 0;}
-
+    //Serial.begin(9600);
     Serial.print("[sweepP="); Serial.print(prop); Serial.print("]");
     Serial.print("[sweepI="); Serial.print(integral); Serial.print("]");
     Serial.print("[sweepD="); Serial.print(deriv); Serial.print("]");
@@ -48,7 +48,6 @@ float PIDloop (float currCO2, int tegco2, float Kp, float Ki, float Kd, bool* re
       sweep = 20;
     }
     
-    *reset = false;
     return sweep;
 }
 

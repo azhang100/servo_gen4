@@ -7,7 +7,7 @@
 #include <SPI.h>
 #include <SD.h>
 #include <Wire.h>
-//#include "rtcsetup.h"
+#include "RTClib.h"
 #include "Serial_multiplexer.h"
 
 #define START_DELIM '['
@@ -17,7 +17,7 @@
 //=======================Serial choose==================
 
 #define BTSERIAL Serial1 // long-range comms
-#define DBSERIAL Serial
+#define DBSERIAL Serial 
 
 //=======================================================
 void setupComms();
@@ -38,6 +38,7 @@ void setupComms() {
 }
 
 void sendCommand(const String& command, const String& arg) {
+  //Serial1.println();
   //portSwitcher.switchPort(2); uncomment if using multiplexer
   BTSERIAL.print(START_DELIM);
   BTSERIAL.print(command);
