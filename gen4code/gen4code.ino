@@ -32,7 +32,7 @@ char receivedChars[numChars];
 //char toChange[numChars];
 char tempChars[numChars];
 
-int tegco2 = 20;
+int tegco2 = 48;
 int prev = 0;
 long loops = 0;
 long elapsed = 0;
@@ -76,7 +76,7 @@ void setup() {
 void loop() {
   while (true) {
     CO2Sensor.switchPort(4);
-    double receivedCO2 = (sensor1.CO2loop() * 0.00076 * 12.38) - 1.9 + 1.5; // calibrated value
+    double receivedCO2 = (sensor1.CO2loop() * 0.00076 * 12.38) - 1.9 + 1.5 - 35-47; // calibrated value
     recvSerial();
     recvSerial3();
 
@@ -100,7 +100,7 @@ void loop() {
 
       sendCommand("egco2", (String)receivedCO2);
 
-      sweep2 = PIDloop(receivedCO2, tegco2, Kp, Ki, Kd, resetI);
+      sweep2 = PIDloop(currCO2c, tegco2, Kp, Ki, Kd, resetI);
       resetI = false;
       float temp = 0;
 
@@ -202,7 +202,6 @@ void recvSerial3() {
 
   while (Serial3.available() > 0 && newData == false) {
     rc = Serial3.read();
-    Serial.print('Hi');
 
     if (recvInProgress == true) {
       if (rc != endMarker) {
@@ -288,7 +287,7 @@ void showNewNumber() {
     dataNumber = 0.000;
     dataNumber = atof(receivedChars);
     dataNumber = dataNumber * 7.6;  // THIS IS THE VALUE TO FILTER
-    currCO2c = dataNumber + 9;     //calibrate with room air
+    currCO2c = dataNumber + 9 + 71;     //calibrate with room air
     //printtime();
     sendCommand("altEgco2", (String)currCO2c);
     sendCommand("tegco2", (String)tegco2);

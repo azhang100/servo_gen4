@@ -37,10 +37,10 @@ float PIDloop (float currCO2, int tegco2, float Kp, float Ki, float Kd, bool res
 
     sweep = deriv + integral + prop; //66
   
-    if (sweep < 0.7){
+    if (sweep < 0.55){
       //integral = (0.5-(error-Kp));
       //integral += 1;
-      sweep = 0.7;
+      sweep = 0.55;
     }
     if (sweep > 20){
       //integral = (5-(error*Kp));
