@@ -21,27 +21,27 @@ void printtime(){
     byte bcdMinutes = Wire.read();
     byte bcdHours = Wire.read();
     //Show HRS
-    Serial.print(bcdHours >> 4);
-    Serial.print(bcdHours & 0x0F);
-    Serial.print(':');
+    DBSERIAL.print(bcdHours >> 4);
+    DBSERIAL.print(bcdHours & 0x0F);
+    DBSERIAL.print(':');
     //show MIN--
-    Serial.print(bcdMinutes >> 4);
-    Serial.print(bcdMinutes & 0x0F);
-    Serial.print(':');
-    //shiw SEC
-    Serial.print(bcdSeconds >> 4);
-    Serial.print(bcdSeconds & 0x0F);
+    DBSERIAL.print(bcdMinutes >> 4);
+    DBSERIAL.print(bcdMinutes & 0x0F);
+    DBSERIAL.print(':');
+    //show SEC
+    DBSERIAL.print(bcdSeconds >> 4);
+    DBSERIAL.print(bcdSeconds & 0x0F);
 
-    Serial1.print(bcdHours >> 4);
-    Serial1.print(bcdHours & 0x0F);
-    Serial1.print(':');
+    BTSERIAL.print(bcdHours >> 4);
+    BTSERIAL.print(bcdHours & 0x0F);
+    BTSERIAL.print(':');
     //show MIN--
-    Serial1.print(bcdMinutes >> 4);
-    Serial1.print(bcdMinutes & 0x0F);
-    Serial1.print(':');
-    //shiw SEC
-    Serial1.print(bcdSeconds >> 4);
-    Serial1.print(bcdSeconds & 0x0F);
+    BTSERIAL.print(bcdMinutes >> 4);
+    BTSERIAL.print(bcdMinutes & 0x0F);
+    BTSERIAL.print(':');
+    //show SEC
+    BTSERIAL.print(bcdSeconds >> 4);
+    BTSERIAL.print(bcdSeconds & 0x0F);
     //Serial.println();
     delay(1000);
 }

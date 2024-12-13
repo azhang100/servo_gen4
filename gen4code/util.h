@@ -16,7 +16,7 @@
 
 //=======================Serial choose==================
 
-#define BTSERIAL Serial1 // long-range comms
+#define BTSERIAL Serial3 // long-range comms
 #define DBSERIAL Serial 
 
 //=======================================================
@@ -38,7 +38,6 @@ void setupComms() {
 }
 
 void sendCommand(const String& command, const String& arg) {
-  //Serial1.println();
   //portSwitcher.switchPort(2); uncomment if using multiplexer
   BTSERIAL.print(START_DELIM);
   BTSERIAL.print(command);

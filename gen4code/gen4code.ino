@@ -30,7 +30,7 @@ String toChange;
 
 char receivedChars[numChars];
 //char toChange[numChars];
-char tempChars[numChars]; // TODO Andy: Can we make this a local variable in the parse() function?
+char tempChars[numChars];  // TODO Andy: Can we make this a local variable in the parse() function?
 
 int tegco2 = 48;
 int prev = 0;
@@ -44,7 +44,7 @@ float currCO2b;
 float currCO2c;
 float sweep2 = 5;  //CHANGE VALUE FOR FIXED SWEEP
 float dataNumber = 0.0;
-float changeVal; // TODO Andy: Can we make this a local variable in the parse() function?
+float changeVal;  // TODO Andy: Can we make this a local variable in the parse() function?
 float fixed = 0.0;
 bool newData = false;
 bool looped = false;
@@ -59,7 +59,6 @@ void setup() {
   PIDsetup();
   Serial.begin(9600);
   Serial.print("Serial online");
-  Serial1.begin(9600);
   Serial2.begin(9600);
   Serial2.print("Serial2 online");
   mfc1.switchPort(2);  //multiplexer port 8
@@ -84,44 +83,44 @@ void loop() {
       newData = false;
     }
 
-    if (Serial1.available() > 0) {  // TODO Andy: What is the purpose of this if-statement?
+    // if (Serial1.available() > 0) {  // TODO Andy: What is the purpose of this if-statement?
 
-      recvWithEndMarker(&Serial1);
-      showNewNumber();
+    // recvWithEndMarker(&Serial1);
+    showNewNumber();
 
-      if (looped) {
-        continue;
-      }
-      Serial1.println();
-
-      sendCommand("egco2", (String)receivedCO2);
-
-      sweep2 = PIDloop(currCO2c, tegco2, Kp, Ki, Kd, resetI);
-      resetI = false;
-      float temp = 0;
-
-
-      if (fixedSweep) {
-        sweep2 = fixed;
-      }
-
-      sendCommand("tSweep", (String)sweep2);
-      sendCommand("loops", (String)loops);
-      loops++;
-      elapsed = millis() / 1000;
-      sendCommand("elapsed", (String)elapsed);
-      if (loops % 1800 == 1799) {
-        blast();
-      }  //every 30 mins
-      mfc1.setFlow(sweep2 / 10);
-      delay(200);
-      looped = true;
-
-      //Serial.println();
-      Serial3.println();
-      Serial.println();
-      Serial1.println();
+    if (looped) {
+      continue;
     }
+    // Serial1.println();
+
+    sendCommand("egco2", (String)receivedCO2);
+
+    sweep2 = PIDloop(currCO2c, tegco2, Kp, Ki, Kd, resetI);
+    resetI = false;
+    float temp = 0;
+
+
+    if (fixedSweep) {
+      sweep2 = fixed;
+    }
+
+    sendCommand("tSweep", (String)sweep2);
+    sendCommand("loops", (String)loops);
+    loops++;
+    elapsed = millis() / 1000;
+    sendCommand("elapsed", (String)elapsed);
+    if (loops % 1800 == 1799) {
+      blast();
+    }  //every 30 mins
+    mfc1.setFlow(sweep2 / 10);
+    delay(200);
+    looped = true;
+
+    //Serial.println();
+    Serial3.println();
+    Serial.println();
+    // Serial1.println();
+    // }
   }
 }
 
