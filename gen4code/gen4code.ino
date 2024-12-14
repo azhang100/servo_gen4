@@ -62,6 +62,8 @@ void setup() {
   Serial1.begin(9600);
   Serial2.begin(9600);
   Serial2.print("Serial2 online");
+  Serial3.begin(9600);
+  Serial.print("Serial3 online");
   mfc1.switchPort(2); //multiplexer port 8
   sensor1.CO2setup();
   pinMode(2, OUTPUT);
